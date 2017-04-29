@@ -12,5 +12,5 @@ func main() {
 	fmt.Println("gtm_dist: " + gtmDist)
 	err := gogtm.Start()
 	mstools.ErrCheck(err)
-
+	gogtm.Stop()
 }
