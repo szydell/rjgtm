@@ -10,20 +10,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/szydell/gogtm"
-	"github.com/szydell/mstools"
 )
-
-func startRouter() {
-	router := httprouter.New()
-
-	//define routes
-	//router.GET("/", Index)
-	router.GET("/v1/data/:glvn", getGlvn)
-
-	//Start to listen
-	mstools.ErrCheck(http.ListenAndServe(":8080", router))
-
-}
 
 func getGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	glvn := string(ps.ByName("glvn"))
@@ -46,4 +33,23 @@ func getGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		fmt.Fprintf(w, "{\"%s\": \"%s\"}", glvn, response)
 	}
 	log.Println("200 /v1/data/" + glvn + " -> " + response)
+}
+
+func count(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	glvn := string(ps.ByName("glvn"))
+	log.Println("COUNT, glvn:" + glvn)
+	response, err := gogtm.Xecute("")
+	if err != nil {
+		http.Error(w, "503 Service Unavailable", 503)
+		log.Println("503 /v1/data/" + glvn + "/count")
+		return
+	}
+	log.Println("Count:" + response)
+}
+
+func halt(srv *http.Server) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		gogtm.Stop()
+		srv.Shutdown(nil)
+	}
 }
