@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/cenkalti/rpc2"
+	rjerr "github.com/szydell/rjgtm/rjerr"
 )
 
 type allWorkers struct {
@@ -48,9 +49,9 @@ func (w *allWorkers) returnWorkers() map[*rpc2.Client]bool {
 	return w.list
 }
 
-func (w *allWorkers) doWork(command string, data interface{}) (reply interface{}, err error) {
+func (w *allWorkers) doWork(command string, data interface{}) (reply string, err error) {
 	if len(w.list) < 1 {
-		return nil, errNoAvailableWorkers
+		return "", rjerr.ErrNoAvailableWorkers
 	}
 	var worker *rpc2.Client
 	var state bool
@@ -62,7 +63,7 @@ func (w *allWorkers) doWork(command string, data interface{}) (reply interface{}
 	}
 	if worker == nil {
 		w.Unlock()
-		return nil, errAllWorkersBusy
+		return "", rjerr.ErrAllWorkersBusy
 	}
 	w.list[worker] = false
 	w.Unlock()
