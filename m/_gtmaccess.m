@@ -3,7 +3,7 @@
     ;
 init(error)
     set $ztrap="new tmp set error=$ecode set tmp=$piece($ecode,"","",2) quit:$quit $extract(tmp,2,$length(tmp)) quit"
-    use $P:(EXCEPTION="ZGOTO 0":CTRAP=$C(3))
+    ;use $P:(EXCEPTION="ZGOTO 0":CTRAP=$C(3))
     quit:$quit 0 quit
     ;
 set(var,value,error)
