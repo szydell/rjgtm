@@ -26,6 +26,8 @@ func main() {
 	defer gogtm.Stop()
 	mstools.ErrCheck(err)
 
+	fmt.Println(gogtm.GvStat())
+
 	conn, _ := net.Dial("tcp", "127.0.0.1:5000")
 	client := rpc2.NewClient(conn)
 	client.Handle("getGlvn", getGlvn)
