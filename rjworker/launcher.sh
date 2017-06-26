@@ -18,4 +18,4 @@ export GTMCI="/home/szydell/code/src/github.com/szydell/rjgtm/m/gtmacces.ci"
 
 export gtm_etrap='I 0=$ST W "Process terminated by: ",$ZS,! ZHALT 1'
 export HUGETLB_SHM=yes
-mumps -run %XCMD 'ZSYSTEM "./worker" HALT'
+./rjworker
