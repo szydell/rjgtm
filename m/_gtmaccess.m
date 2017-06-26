@@ -3,7 +3,6 @@
     ;
 init(error)
     set $ztrap="new tmp set error=$ecode set tmp=$piece($ecode,"","",2) quit:$quit $extract(tmp,2,$length(tmp)) quit"
-    ;use $P:(EXCEPTION="ZGOTO 0":CTRAP=$C(3))
     quit:$quit 0 quit
     ;
 set(var,value,error)
@@ -38,8 +37,8 @@ lock(var,error)
     lock @var
     quit:$quit 0 quit
     ;
-bye;
-    W !,"C-C pressed"
-    use $P:(EXCEPTION="":CTRAP="")
-    W "C-C pressed"
-    zgoto 0
+gvstat(stats)
+    N RET 
+    S REGION=$V("GVFIRST") S RET=REGION_"->"_$V("GVSTAT",REGION)
+    F I=1:1 S REGION=$V("GVNEXT",REGION) Q:REGION=""  S RET=RET_"|"_REGION_"->"_$V("GVSTAT",REGION)
+    stats=RET

@@ -17,6 +17,7 @@ import (
 var id = uuid.NewV4().String()
 
 func main() {
+
 	gtmGblDir := os.Getenv("gtmgbldir")
 	fmt.Println("gtmgbldir: " + gtmGblDir)
 	gtmDist := os.Getenv("gtm_dist")

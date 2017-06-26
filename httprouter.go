@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 
 	"github.com/julienschmidt/httprouter"
 	rjerr "github.com/szydell/rjgtm/rjerr"
@@ -15,7 +16,9 @@ func getGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	reply, err := workers.doWork("getGlvn", glvn)
 	if err != nil {
 		log.Println(err)
+		log.Println(reflect.TypeOf(err))
 		tmpID, tmpDescr := errorTypeAndMessage(err)
+		log.Println(tmpID, tmpDescr)
 		http.Error(w, tmpDescr, tmpID)
 		return
 	}
