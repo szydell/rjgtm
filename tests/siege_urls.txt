@@ -1,6 +1,2 @@
 http://localhost:8080/v1/data/test
-http://localhost:8080/v1/data/test1
-http://localhost:8080/v1/data/test2
-http://localhost:8080/v1/data/test3
-http://localhost:8080/v1/data/test4
-http://localhost:8080/v1/data/test5
+http://localhost:8080/v1/gvstats

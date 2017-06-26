@@ -27,25 +27,6 @@ func main() {
 	})
 	server.OnConnect(Subscribe)
 
-	// type Args struct{ A, B int }
-	// type Reply int
-
-	// server.Handle("add", func(client *rpc2.Client, args *Args, reply *Reply) error {
-	// 	// Reversed call (server to client)
-	// 	var rep Reply
-	// 	client.Call("mult", Args{2, 3}, &rep)
-	// 	fmt.Println("mult result:", rep)
-
-	// 	*reply = Reply(args.A + args.B)
-	// 	return nil
-	// })
-
-	// server.Handle("dupadupa", func(client *rpc2.Client, args *Args, reply *Reply) error {
-	// 	fmt.Println("Subscribing now...")
-	// 	*reply = Reply(50)
-	// 	return nil
-	// })
-
 	//Start listening for workers
 	lis, _ := net.Listen("tcp", "127.0.0.1:5000")
 	go server.Accept(lis)
@@ -60,6 +41,7 @@ func main() {
 
 	//define routes
 	router.GET("/v1/data/:glvn", getGlvn)
+	router.GET("/v1/gvstats", getGvStat)
 	//Start listening for clients
 	err := srv.ListenAndServe()
 	mstools.ErrCheck(err)

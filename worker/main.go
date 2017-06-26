@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
-	"os"
 	"strconv"
 
 	"github.com/cenkalti/rpc2"
@@ -18,19 +16,14 @@ var id = uuid.NewV4().String()
 
 func main() {
 
-	gtmGblDir := os.Getenv("gtmgbldir")
-	fmt.Println("gtmgbldir: " + gtmGblDir)
-	gtmDist := os.Getenv("gtm_dist")
-	fmt.Println("gtm_dist: " + gtmDist)
 	err := gogtm.Start()
 	defer gogtm.Stop()
 	mstools.ErrCheck(err)
 
-	fmt.Println(gogtm.GvStat())
-
 	conn, _ := net.Dial("tcp", "127.0.0.1:5000")
 	client := rpc2.NewClient(conn)
 	client.Handle("getGlvn", getGlvn)
+	client.Handle("gvStats", gvStats)
 	client.Run()
 
 }
@@ -57,5 +50,34 @@ func getGlvn(client *rpc2.Client, glvn string, reply *string) error {
 	}
 	log.Println("200 /v1/data/" + glvn + " -> " + response)
 
+	return nil
+}
+
+func gvStats(client *rpc2.Client, _, reply *string) error {
+
+	log.Println("GET gvstat")
+	response, err := gogtm.GvStat()
+	if err != nil {
+		log.Println("503 /v1/gvstat")
+		*reply = ""
+		return rjerr.ErrGtmCantGetGlvn
+	}
+	buildJSON := "[{\""
+	for _, char := range response {
+		switch char {
+		case 44:
+			buildJSON = buildJSON + ",\""
+		case 58:
+			buildJSON = buildJSON + "\":"
+		case 59:
+			buildJSON = buildJSON + "\":{\""
+		case 124:
+			buildJSON = buildJSON + "},\""
+		default:
+			buildJSON = buildJSON + (string(char))
+		}
+	}
+	buildJSON = buildJSON + "}}]"
+	*reply = buildJSON
 	return nil
 }

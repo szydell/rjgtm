@@ -67,7 +67,12 @@ func (w *allWorkers) doWork(command string, data interface{}) (reply string, err
 	}
 	w.list[worker] = false
 	w.Unlock()
-	err = worker.Call("getGlvn", data, &reply)
+	switch command {
+	case "getGlvn":
+		err = worker.Call("getGlvn", data, &reply)
+	case "GvStats":
+		err = worker.Call("gvStats", data, &reply)
+	}
 	w.setState(worker, true)
 	return
 }
