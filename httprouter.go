@@ -20,7 +20,7 @@ func getGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		http.Error(w, tmpDescr, tmpID)
 		return
 	}
-
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s", reply)
 	log.Println(reply, err)
 }
@@ -36,7 +36,7 @@ func getGvStat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		http.Error(w, tmpDescr, tmpID)
 		return
 	}
-
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s", reply)
 	log.Println(reply, err)
 }

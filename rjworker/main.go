@@ -62,22 +62,23 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 		*reply = ""
 		return rjerr.ErrGtmCantGetGlvn
 	}
-	buildJSON := "[{\""
+	buildJSON := []rune("[{\"")
+
 	for _, char := range response {
 		switch char {
 		case 44:
-			buildJSON = buildJSON + ",\""
+			buildJSON = append(buildJSON, []rune{',', '"'}...)
 		case 58:
-			buildJSON = buildJSON + "\":"
+			buildJSON = append(buildJSON, []rune{'"', ':'}...)
 		case 59:
-			buildJSON = buildJSON + "\":{\""
+			buildJSON = append(buildJSON, []rune{'"', ':', '{', '"'}...)
 		case 124:
-			buildJSON = buildJSON + "},\""
+			buildJSON = append(buildJSON, []rune{'}', ',', '"'}...)
 		default:
-			buildJSON = buildJSON + (string(char))
+			buildJSON = append(buildJSON, rune(char))
 		}
 	}
-	buildJSON = buildJSON + "}}]"
-	*reply = buildJSON
+	buildJSON = append(buildJSON, []rune{'}', '}', ']'}...)
+	*reply = string(buildJSON)
 	return nil
 }
