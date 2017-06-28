@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/szydell/rjgtm?status.svg)](https://godoc.org/github.com/szydell/rjgtm)[![GoReport](https://goreportcard.com/badge/github.com/szydell/rjgtm)](https://goreportcard.com/report/github.com/szydell/rjgtm)
+[![GoDoc](https://godoc.org/github.com/szydell/rjgtm?status.svg)](https://godoc.org/github.com/szydell/rjgtm) [![GoReport](https://goreportcard.com/badge/github.com/szydell/rjgtm)](https://goreportcard.com/report/github.com/szydell/rjgtm)
 # RESTful JSON API for GT.M
 --------------------------------
 
