@@ -24,6 +24,7 @@ func main() {
 	client := rpc2.NewClient(conn)
 	client.Handle("getGlvn", getGlvn)
 	client.Handle("gvStats", gvStats)
+	client.Handle("cleanGvStats", cleanGvStats)
 	client.Run()
 
 }
@@ -34,19 +35,19 @@ func getGlvn(client *rpc2.Client, glvn string, reply *string) error {
 	response, err := gogtm.Get("^"+glvn, id)
 	if err != nil {
 		log.Println("503 /v1/data/" + glvn)
-		*reply = ""
+		*reply = "{\"status\":\"DB ERROR\"}"
 		return rjerr.ErrGtmCantGetGlvn
 	}
 	if response == id {
 		log.Println("404 /v1/data/" + glvn)
-		*reply = ""
+		*reply = "{\"status\":\"GLVN not found\"}"
 		return rjerr.Err404
 	}
 	//return string formatted as JSON, try to figure out if response is a string or integer
 	if _, err := strconv.Atoi(response); err == nil {
-		*reply = "{\"" + glvn + "\": " + response + "}"
+		*reply = "{\"RESPONSE\":{\"" + glvn + "\": " + response + "}, \"STATUS\":\"OK\"}"
 	} else {
-		*reply = "{\"" + glvn + "\": \"" + response + "\"}"
+		*reply = "{\"RESPONSE\":{\"" + glvn + "\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
 	}
 	log.Println("200 /v1/data/" + glvn + " -> " + response)
 
@@ -59,10 +60,11 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 	response, err := gogtm.GvStat()
 	if err != nil {
 		log.Println("503 /v1/gvstat")
-		*reply = ""
+		*reply = "{\"status\":\"DB ERROR\"}"
 		return rjerr.ErrGtmCantGetGlvn
 	}
-	buildJSON := []rune("[{\"")
+
+	buildJSON := []rune("{\"RESPONSE\":[{\"")
 
 	for _, char := range response {
 		switch char {
@@ -78,7 +80,19 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 			buildJSON = append(buildJSON, rune(char))
 		}
 	}
-	buildJSON = append(buildJSON, []rune{'}', '}', ']'}...)
+	buildJSON = append(buildJSON, []rune("}}],\"STATUS\":\"OK\"}")...)
 	*reply = string(buildJSON)
 	return nil
+}
+
+func cleanGvStats(client *rpc2.Client, _, reply *string) error {
+	log.Println("DELETE gvstat")
+	err := gogtm.Xecute("S REGION=$V(\"GVFIRST\") VIEW \"GVSRESET\":REGION F I=1:1 S REGION=$V(\"GVNEXT\",REGION) Q:REGION=\"\"  VIEW \"GVSRESET\":REGION")
+	if err != nil {
+		*reply = "{\"status\":\"OK\"}"
+	} else {
+		log.Println("503 DELETE gvstats failed (cleanGvStats function)")
+		*reply = "{\"status\":\"ERROR\"}"
+	}
+	return err
 }

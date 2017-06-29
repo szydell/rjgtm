@@ -72,6 +72,8 @@ func (w *allWorkers) doWork(command string, data interface{}) (reply string, err
 		err = worker.Call("getGlvn", data, &reply)
 	case "GvStats":
 		err = worker.Call("gvStats", data, &reply)
+	case "cleanGvStats":
+		err = worker.Call("cleanGvStats", data, &reply)
 	}
 	w.setState(worker, true)
 	return
