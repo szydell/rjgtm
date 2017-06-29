@@ -35,12 +35,10 @@ func getGlvn(client *rpc2.Client, glvn string, reply *string) error {
 	response, err := gogtm.Get("^"+glvn, id)
 	if err != nil {
 		log.Println("503 /v1/data/" + glvn)
-		*reply = "{\"status\":\"DB ERROR\"}"
 		return rjerr.ErrGtmCantGetGlvn
 	}
 	if response == id {
 		log.Println("404 /v1/data/" + glvn)
-		*reply = "{\"status\":\"GLVN not found\"}"
 		return rjerr.Err404
 	}
 	//return string formatted as JSON, try to figure out if response is a string or integer
@@ -60,7 +58,6 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 	response, err := gogtm.GvStat()
 	if err != nil {
 		log.Println("503 /v1/gvstat")
-		*reply = "{\"status\":\"DB ERROR\"}"
 		return rjerr.ErrGtmCantGetGlvn
 	}
 
@@ -88,7 +85,7 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 func cleanGvStats(client *rpc2.Client, _, reply *string) error {
 	log.Println("DELETE gvstat")
 	err := gogtm.Xecute("S REGION=$V(\"GVFIRST\") VIEW \"GVSRESET\":REGION F I=1:1 S REGION=$V(\"GVNEXT\",REGION) Q:REGION=\"\"  VIEW \"GVSRESET\":REGION")
-	if err != nil {
+	if err == nil {
 		*reply = "{\"status\":\"OK\"}"
 	} else {
 		log.Println("503 DELETE gvstats failed (cleanGvStats function)")

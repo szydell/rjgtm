@@ -2,7 +2,6 @@ package rjerr
 
 import (
 	"errors"
-	"strings"
 )
 
 //ErrNoAvailableWorkers means that no workers are available
@@ -18,15 +17,19 @@ var ErrGtmCantGetGlvn = errors.New("GT.M error. Get does not respond properly")
 var Err404 = errors.New("Not found")
 
 //ErrorTypeAndMessage try to figure out what type of http error should be returned
-func ErrorTypeAndMessage(reply string) (id int) {
+func ErrorTypeAndMessage(err error) (id int, descr string) {
 
-	switch {
-	case strings.Contains(reply, "{\"ERROR"):
-		id = 503
-	case strings.Contains(reply, "not found"):
+	switch err.Error() {
+	case Err404.Error():
 		id = 404
+	case ErrNoAvailableWorkers.Error():
+		id = 503
+	case ErrAllWorkersBusy.Error():
+		id = 503
 	default:
 		id = 500
 	}
+
+	descr = "{\"STATUS\":\"" + err.Error() + "\"}"
 	return
 }
