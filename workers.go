@@ -12,6 +12,11 @@ type allWorkers struct {
 	list map[*rpc2.Client]bool
 }
 
+type glvn struct {
+	key   string
+	value string
+}
+
 //NewAllWorkers constructor to initialize map
 func newAllWorkers() *allWorkers {
 	var w allWorkers
@@ -67,14 +72,7 @@ func (w *allWorkers) doWork(command string, data interface{}) (reply string, err
 	}
 	w.list[worker] = false
 	w.Unlock()
-	switch command {
-	case "getGlvn":
-		err = worker.Call("getGlvn", data, &reply)
-	case "GvStats":
-		err = worker.Call("gvStats", data, &reply)
-	case "cleanGvStats":
-		err = worker.Call("cleanGvStats", data, &reply)
-	}
+	err = worker.Call(command, data, &reply)
 	w.setState(worker, true)
 	return
 }

@@ -10,14 +10,10 @@ import (
 	"github.com/szydell/gogtm"
 	"github.com/szydell/mstools"
 	"github.com/szydell/rjgtm/rjerr"
+	"github.com/szydell/rjgtm/shared"
 )
 
 var id = uuid.NewV4().String()
-
-type glvn struct {
-	key   string
-	value string
-}
 
 func main() {
 
@@ -100,13 +96,13 @@ func cleanGvStats(client *rpc2.Client, _, reply *string) error {
 	return err
 }
 
-func setGlvn(client *rpc2.Client, glvn glvn, reply *string) error {
+func setGlvn(client *rpc2.Client, glvn shared.Glvn, reply *string) error {
 
-	log.Println("POST glvn:" + glvn.key + "(setGlvn function)")
-	err := gogtm.Set("^"+glvn.key, glvn.value)
+	log.Println("POST glvn:" + glvn.Key + "(setGlvn function)")
+	err := gogtm.Set("^"+glvn.Key, glvn.Value)
 
 	if err != nil {
-		log.Println("503 SET /v1/data/" + glvn.key)
+		log.Println("503 SET /v1/data/" + glvn.Key)
 		return rjerr.ErrGtmCantSetGlvn
 	}
 	*reply = "{\"status\":\"OK\"}"

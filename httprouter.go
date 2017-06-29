@@ -29,7 +29,7 @@ func getGvStat(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	log.Println("GET gvstat")
 	w.Header().Set("Content-Type", "application/json")
-	reply, err := workers.doWork("GvStats", "")
+	reply, err := workers.doWork("gvStats", "")
 	if err != nil {
 		tmpID, tmpDescr := rjerr.ErrorTypeAndMessage(err)
 		log.Println(tmpID, tmpDescr)
