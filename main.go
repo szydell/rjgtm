@@ -43,6 +43,7 @@ func main() {
 	router.GET("/v1/data/:glvn", getGlvn)
 	router.GET("/v1/gvstats", getGvStat)
 	router.DELETE("/v1/gvstats", deleteGvStat)
+	router.POST("/v1/data/:glvn", setGlvn)
 	//Start listening for clients
 	err := srv.ListenAndServe()
 	mstools.ErrCheck(err)

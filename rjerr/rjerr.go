@@ -1,3 +1,4 @@
+//Package rjerr contains errors shared between broker and workers
 package rjerr
 
 import (
@@ -26,6 +27,8 @@ func ErrorTypeAndMessage(err error) (id int, descr string) {
 	case Err404.Error():
 		id = 404
 	case ErrNoAvailableWorkers.Error():
+		id = 503
+	case ErrGtmCantSetGlvn.Error():
 		id = 503
 	case ErrAllWorkersBusy.Error():
 		id = 503

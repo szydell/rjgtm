@@ -1,5 +1,5 @@
-//Package shared contains structures used both in broker and workers
-package shared
+//Package rjshared contains structures used both in broker and workers
+package rjshared
 
 //Glvn struct
 type Glvn struct {

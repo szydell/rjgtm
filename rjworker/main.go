@@ -10,7 +10,6 @@ import (
 	"github.com/szydell/gogtm"
 	"github.com/szydell/mstools"
 	"github.com/szydell/rjgtm/rjerr"
-	"github.com/szydell/rjgtm/shared"
 )
 
 var id = uuid.NewV4().String()
@@ -96,7 +95,7 @@ func cleanGvStats(client *rpc2.Client, _, reply *string) error {
 	return err
 }
 
-func setGlvn(client *rpc2.Client, glvn shared.Glvn, reply *string) error {
+func setGlvn(client *rpc2.Client, glvn rjshared.Glvn, reply *string) error {
 
 	log.Println("POST glvn:" + glvn.Key + "(setGlvn function)")
 	err := gogtm.Set("^"+glvn.Key, glvn.Value)
