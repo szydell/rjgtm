@@ -70,14 +70,14 @@ func gvStats(client *rpc2.Client, _, reply *string) error {
 		case 58:
 			buildJSON = append(buildJSON, []rune{'"', ':'}...)
 		case 59:
-			buildJSON = append(buildJSON, []rune{'"', ':', '{', '"'}...)
+			buildJSON = append(buildJSON, []rune{'"', ':', '[', '{', '"'}...)
 		case 124:
-			buildJSON = append(buildJSON, []rune{'}', ',', '"'}...)
+			buildJSON = append(buildJSON, []rune{'}', ']', ',', '"'}...)
 		default:
 			buildJSON = append(buildJSON, rune(char))
 		}
 	}
-	buildJSON = append(buildJSON, []rune("}}],\"STATUS\":\"OK\"}")...)
+	buildJSON = append(buildJSON, []rune("}]}],\"STATUS\":\"OK\"}")...)
 	*reply = string(buildJSON)
 	return nil
 }
