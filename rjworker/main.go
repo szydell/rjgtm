@@ -14,6 +14,11 @@ import (
 
 var id = uuid.NewV4().String()
 
+type glvn struct {
+	key   string
+	value string
+}
+
 func main() {
 
 	err := gogtm.Start()
@@ -25,6 +30,7 @@ func main() {
 	client.Handle("getGlvn", getGlvn)
 	client.Handle("gvStats", gvStats)
 	client.Handle("cleanGvStats", cleanGvStats)
+	client.Handle("setGlvn", setGlvn)
 	client.Run()
 
 }
@@ -92,4 +98,18 @@ func cleanGvStats(client *rpc2.Client, _, reply *string) error {
 		*reply = "{\"status\":\"ERROR\"}"
 	}
 	return err
+}
+
+func setGlvn(client *rpc2.Client, glvn glvn, reply *string) error {
+
+	log.Println("POST glvn:" + glvn.key + "(setGlvn function)")
+	err := gogtm.Set("^"+glvn.key, glvn.value)
+
+	if err != nil {
+		log.Println("503 SET /v1/data/" + glvn.key)
+		return rjerr.ErrGtmCantSetGlvn
+	}
+	*reply = "{\"status\":\"OK\"}"
+
+	return nil
 }
