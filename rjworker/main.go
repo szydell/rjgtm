@@ -97,7 +97,6 @@ func cleanGvStats(client *rpc2.Client, _, reply *string) error {
 }
 
 func setGlvn(client *rpc2.Client, glvn rjshared.Glvn, reply *string) error {
-
 	log.Println("POST glvn:" + glvn.Key + "(setGlvn function)")
 	err := gogtm.Set("^"+glvn.Key, glvn.Value)
 
