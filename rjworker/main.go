@@ -10,6 +10,7 @@ import (
 	"github.com/szydell/gogtm"
 	"github.com/szydell/mstools"
 	"github.com/szydell/rjgtm/rjerr"
+	"github.com/szydell/rjgtm/rjshared"
 )
 
 var id = uuid.NewV4().String()
