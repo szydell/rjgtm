@@ -1,0 +1,8 @@
+http://localhost:8080/v1/data/test
+http://localhost:8080/v1/gvstats
+http://localhost:8080/v1/data/test2
+http://localhost:8080/v1/data/test1
+http://localhost:8080/v1/data/test4
+http://localhost:8080/v1/data/test POST 1234567890
+http://localhost:8080/v1/data/test POST 0987654321
+http://localhost:8080/v1/data/test POST dupadupa
