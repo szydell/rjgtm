@@ -77,3 +77,35 @@ func setGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", reply)
 	log.Println("200", reply, err)
 }
+
+func orderGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	glvn := string(ps.ByName("glvn"))
+	log.Println("ORDER glvn:" + glvn)
+	w.Header().Set("Content-Type", "application/json")
+	reply, err := workers.doWork("orderGlvn", glvn)
+	if err != nil {
+		tmpID, tmpDescr := rjerr.ErrorTypeAndMessage(err)
+		log.Println(tmpID, tmpDescr)
+		http.Error(w, tmpDescr, tmpID)
+		return
+	}
+
+	fmt.Fprintf(w, "%s", reply)
+	log.Println("200 ", reply, err)
+}
+
+func prevGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	glvn := string(ps.ByName("glvn"))
+	log.Println("PREVIOUS glvn:" + glvn)
+	w.Header().Set("Content-Type", "application/json")
+	reply, err := workers.doWork("prevGlvn", glvn)
+	if err != nil {
+		tmpID, tmpDescr := rjerr.ErrorTypeAndMessage(err)
+		log.Println(tmpID, tmpDescr)
+		http.Error(w, tmpDescr, tmpID)
+		return
+	}
+
+	fmt.Fprintf(w, "%s", reply)
+	log.Println("200 ", reply, err)
+}

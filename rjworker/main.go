@@ -27,6 +27,8 @@ func main() {
 	client.Handle("gvStats", gvStats)
 	client.Handle("cleanGvStats", cleanGvStats)
 	client.Handle("setGlvn", setGlvn)
+	client.Handle("orderGlvn", orderGlvn)
+	client.Handle("prevGlvn", prevGlvn)
 	client.Run()
 
 }
@@ -105,6 +107,46 @@ func setGlvn(client *rpc2.Client, glvn rjshared.Glvn, reply *string) error {
 		return rjerr.ErrGtmCantSetGlvn
 	}
 	*reply = "{\"status\":\"OK\"}"
+
+	return nil
+}
+
+func orderGlvn(client *rpc2.Client, glvn string, reply *string) error {
+
+	log.Println("ORDER glvn:" + glvn)
+	response, err := gogtm.Order("^"+glvn, "")
+	if err != nil {
+		log.Println("503 /v1/order/" + glvn)
+		return rjerr.ErrGtmCantGetGlvn
+	}
+
+	//return string formatted as JSON, try to figure out if response is a string or integer
+	if _, err := strconv.Atoi(response); err == nil {
+		*reply = "{\"RESPONSE\":{\"next glvn\": " + response + "}, \"STATUS\":\"OK\"}"
+	} else {
+		*reply = "{\"RESPONSE\":{\"next glvn\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
+	}
+	log.Println("200 /v1/order/" + glvn + " -> next glvn:" + response)
+
+	return nil
+}
+
+func prevGlvn(client *rpc2.Client, glvn string, reply *string) error {
+
+	log.Println("PREVIOUS glvn:" + glvn)
+	response, err := gogtm.Order("^"+glvn, "-1")
+	if err != nil {
+		log.Println("503 /v1/prev/" + glvn)
+		return rjerr.ErrGtmCantGetGlvn
+	}
+
+	//return string formatted as JSON, try to figure out if response is a string or integer
+	if _, err := strconv.Atoi(response); err == nil {
+		*reply = "{\"RESPONSE\":{\"previous glvn\": " + response + "}, \"STATUS\":\"OK\"}"
+	} else {
+		*reply = "{\"RESPONSE\":{\"previous glvn\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
+	}
+	log.Println("200 /v1/prev/" + glvn + " -> previous glvn:" + response)
 
 	return nil
 }
