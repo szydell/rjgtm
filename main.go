@@ -46,6 +46,7 @@ func main() {
 	router.DELETE("/v1/gvstats", deleteGvStat)
 	router.GET("/v1/order/:glvn", orderGlvn)
 	router.GET("/v1/prev/:glvn", prevGlvn)
+	router.GET("/v1/query/:glvn", queryGlvn)
 
 	//Start listening for clients
 	err := srv.ListenAndServe()

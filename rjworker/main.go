@@ -29,6 +29,7 @@ func main() {
 	client.Handle("setGlvn", setGlvn)
 	client.Handle("orderGlvn", orderGlvn)
 	client.Handle("prevGlvn", prevGlvn)
+	client.Handle("queryGlvn", queryGlvn)
 	client.Run()
 
 }
@@ -147,6 +148,26 @@ func prevGlvn(client *rpc2.Client, glvn string, reply *string) error {
 		*reply = "{\"RESPONSE\":{\"previous glvn\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
 	}
 	log.Println("200 /v1/prev/" + glvn + " -> previous glvn:" + response)
+
+	return nil
+}
+
+func queryGlvn(client *rpc2.Client, glvn string, reply *string) error {
+
+	log.Println("QUERY glvn:" + glvn)
+	response, err := gogtm.Query("^" + glvn)
+	if err != nil {
+		log.Println("503 /v1/query/" + glvn)
+		return err
+	}
+
+	//return string formatted as JSON, try to figure out if response is a string or integer
+	if _, err := strconv.Atoi(response); err == nil {
+		*reply = "{\"RESPONSE\":{\"query result\": " + response + "}, \"STATUS\":\"OK\"}"
+	} else {
+		*reply = "{\"RESPONSE\":{\"query result\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
+	}
+	log.Println("200 /v1/order/" + glvn + " -> query result:" + response)
 
 	return nil
 }
