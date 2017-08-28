@@ -30,6 +30,7 @@ func main() {
 	client.Handle("orderGlvn", orderGlvn)
 	client.Handle("prevGlvn", prevGlvn)
 	client.Handle("queryGlvn", queryGlvn)
+	client.Handle("dataGlvn", dataGlvn)
 	client.Run()
 
 }
@@ -39,11 +40,11 @@ func getGlvn(client *rpc2.Client, glvn string, reply *string) error {
 	log.Println("GET glvn:" + glvn)
 	response, err := gogtm.Get("^"+glvn, id)
 	if err != nil {
-		log.Println("503 /v1/data/" + glvn)
+		log.Println("503 /v1/global/" + glvn)
 		return rjerr.ErrGtmCantGetGlvn
 	}
 	if response == id {
-		log.Println("404 /v1/data/" + glvn)
+		log.Println("404 /v1/global/" + glvn)
 		return rjerr.Err404
 	}
 	//return string formatted as JSON, try to figure out if response is a string or integer
@@ -104,7 +105,7 @@ func setGlvn(client *rpc2.Client, glvn rjshared.Glvn, reply *string) error {
 	err := gogtm.Set("^"+glvn.Key, glvn.Value)
 
 	if err != nil {
-		log.Println("503 SET /v1/data/" + glvn.Key)
+		log.Println("503 SET /v1/global/" + glvn.Key)
 		return rjerr.ErrGtmCantSetGlvn
 	}
 	*reply = "{\"status\":\"OK\"}"
@@ -168,6 +169,22 @@ func queryGlvn(client *rpc2.Client, glvn string, reply *string) error {
 		*reply = "{\"RESPONSE\":{\"query result\": \"" + response + "\"}, \"STATUS\":\"OK\"}"
 	}
 	log.Println("200 /v1/order/" + glvn + " -> query result:" + response)
+
+	return nil
+}
+
+func dataGlvn(client *rpc2.Client, glvn string, reply *string) error {
+
+	log.Println("DATA glvn:" + glvn)
+	val, desc, err := gogtm.Data("^" + glvn)
+	if err != nil {
+		log.Println("503 /v1/data/" + glvn)
+		return err
+	}
+
+	*reply = "{\"RESPONSE\":{\"value\":" + strconv.FormatBool(val) + ",\"descendent\":" + strconv.FormatBool(desc) + "}, \"STATUS\":\"OK\"}"
+
+	log.Println("200 /v1/order/" + glvn + " -> data result:" + *reply)
 
 	return nil
 }

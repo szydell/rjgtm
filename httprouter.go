@@ -125,3 +125,19 @@ func queryGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", reply)
 	log.Println("200 ", reply, err)
 }
+
+func dataGlvn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	glvn := string(ps.ByName("glvn"))
+	log.Println("DATA glvn:" + glvn)
+	w.Header().Set("Content-Type", "application/json")
+	reply, err := workers.doWork("dataGlvn", glvn)
+	if err != nil {
+		tmpID, tmpDescr := rjerr.ErrorTypeAndMessage(err)
+		log.Println(tmpID, tmpDescr)
+		http.Error(w, tmpDescr, tmpID)
+		return
+	}
+
+	fmt.Fprintf(w, "%s", reply)
+	log.Println("200 ", reply, err)
+}

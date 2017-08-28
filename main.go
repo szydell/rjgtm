@@ -20,10 +20,7 @@ func main() {
 	server.OnDisconnect(func(worker *rpc2.Client) {
 		workers.unSubscribeWorker(worker)
 
-		log.Println("List of already subscribed workers:")
-		for key, value := range workers.returnWorkers() {
-			fmt.Println("Worker:", key, "Value:", value)
-		}
+		showWorkers()
 	})
 	server.OnConnect(Subscribe)
 
@@ -40,13 +37,14 @@ func main() {
 	srv := &http.Server{Addr: addr, Handler: router}
 
 	//define routes
-	router.GET("/v1/data/:glvn", getGlvn)
-	router.POST("/v1/data/:glvn", setGlvn)
+	router.GET("/v1/global/:glvn", getGlvn)
+	router.POST("/v1/global/:glvn", setGlvn)
 	router.GET("/v1/gvstats", getGvStat)
 	router.DELETE("/v1/gvstats", deleteGvStat)
 	router.GET("/v1/order/:glvn", orderGlvn)
 	router.GET("/v1/prev/:glvn", prevGlvn)
 	router.GET("/v1/query/:glvn", queryGlvn)
+	router.GET("/v1/data/:glvn", dataGlvn)
 
 	//Start listening for clients
 	err := srv.ListenAndServe()
@@ -58,6 +56,10 @@ func main() {
 func Subscribe(worker *rpc2.Client) {
 	log.Println("Subscribing new worker on connect...")
 	workers.subscribeWorker(worker)
+	showWorkers()
+}
+
+func showWorkers() {
 	log.Println("List of already subscribed workers:")
 	for key, value := range workers.returnWorkers() {
 		fmt.Println("Worker:", key, "Value:", value)
