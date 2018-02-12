@@ -13,7 +13,8 @@ import (
 	"github.com/szydell/rjgtm/rjshared"
 )
 
-var id = uuid.NewV4().String()
+var u, err = uuid.NewV4()
+var id = u.String()
 
 func main() {
 
