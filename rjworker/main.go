@@ -185,7 +185,7 @@ func dataGlvn(client *rpc2.Client, glvn string, reply *string) error {
 
 	*reply = "{\"RESPONSE\":{\"value\":" + strconv.FormatBool(val) + ",\"descendent\":" + strconv.FormatBool(desc) + "}, \"STATUS\":\"OK\"}"
 
-	log.Println("200 /v1/order/" + glvn + " -> data result:" + *reply)
+	log.Println("200 /v1/data/" + glvn + " -> data result:" + *reply)
 
 	return nil
 }
