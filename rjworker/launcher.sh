@@ -1,7 +1,7 @@
 #!/bin/bash
-export gtm_dist="/opt/fis/6.3-001A/utf8"
+export gtm_dist="/opt/fis-gtm/6.3-001A/utf8"
 export gtm_chset="UTF-8"
-. /opt/fis/6.3-001A/gtmprofile
+. /opt/fis-gtm/6.3-001A/gtmprofile
 export gtm_icu_version="5.0"
 export gtm_repl_instance="/home/szydell/.fis-gtm/V6.3-001A_x86_64/g/gtm.repl"
 
